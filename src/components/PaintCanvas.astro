@@ -26,6 +26,14 @@
           <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
           <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
           <button id="purpleBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#a855f7" aria-label="Purple color"></button>
+          
+          <!-- Custom Colors Container -->
+          <div id="customColorsContainer" class="flex space-x-1 sm:space-x-2"></div>
+          
+          <!-- Custom Color Button -->
+          <button id="customColorBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-red-500 via-green-500 to-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" aria-label="Custom color">
+            <div class="w-full h-full rounded-full bg-white opacity-50"></div>
+          </button>
         </div>
         
         <div class="hidden sm:block h-8 sm:h-10 border-r border-yellow-200 mx-2"></div>
@@ -82,6 +90,35 @@
       >
         Zapisz
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Custom Color Picker Modal -->
+<div id="customColorModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
+  <div class="bg-white rounded-lg p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-300">
+    <div class="flex flex-col items-center gap-4">
+      <!-- Pope Face Container -->
+      <div class="relative w-32 h-32">
+        <img src="/pope_images/face_happy.png" alt="Happy Pope" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-300" id="happyPopeFace">
+        <img src="/pope_images/face_unhappy.png" alt="Unhappy Pope" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 opacity-0" id="unhappyPopeFace">
+      </div>
+      
+      <!-- Color Picker -->
+      <input type="color" id="colorPicker" class="w-full h-12 rounded cursor-pointer">
+      
+      <!-- Color Preview -->
+      <div id="colorPreview" class="w-full h-8 rounded border-2 border-gray-300"></div>
+      
+      <!-- Buttons -->
+      <div class="flex gap-2">
+        <button id="cancelColorBtn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md font-bold hover:bg-gray-300 transition">
+          Anuluj
+        </button>
+        <button id="addColorBtn" class="px-4 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition">
+          Dodaj kolor
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -221,6 +258,7 @@
     // Pope Intervention Feature
     let popeIntervention = false;
     const allowedColors = ['#facc15', '#f59e0b', '#fbbf24', '#fcd34d']; // Yellow variants
+    const customAllowedColors = new Set<string>(); // Store custom allowed colors
     const popeImage = '/pope_images/side_face_left.png';
 
     // Initialize pope elements
@@ -281,15 +319,29 @@
       });
     }
 
+    // Function to check if a color is yellowish
+    function isYellowish(color: string): boolean {
+      // Convert hex to RGB
+      const r = parseInt(color.slice(1, 3), 16);
+      const g = parseInt(color.slice(3, 5), 16);
+      const b = parseInt(color.slice(5, 7), 16);
+      
+      // Check if green component is high and red is higher than blue
+      return g > 200 && r > b;
+    }
+
     // Update color selection function
     function setColor(color: string) {
       if (!ctx) return;
       
       console.log('Color selected:', color);
       console.log('Allowed colors:', allowedColors);
+      console.log('Custom allowed colors:', customAllowedColors);
       
-      // Check if color is allowed (any yellow)
-      const isAllowed = allowedColors.includes(color) || color === '#ffffff'; // Allow white for eraser
+      // Check if color is allowed (any yellow or custom allowed color)
+      const isAllowed = allowedColors.includes(color) || 
+                        customAllowedColors.has(color) || 
+                        color === '#ffffff'; // Allow white for eraser
       console.log('Is color allowed?', isAllowed);
       
       if (!isAllowed && !popeIntervention) {
@@ -370,8 +422,10 @@
         // Get color from data attribute
         const color = button.getAttribute('data-color');
         if (color) {
-          // Check if color is allowed (any yellow)
-          const isAllowed = allowedColors.includes(color) || color === '#ffffff'; // Allow white for eraser
+          // Check if color is allowed (any yellow or custom allowed color)
+          const isAllowed = allowedColors.includes(color) || 
+                           customAllowedColors.has(color) || 
+                           color === '#ffffff'; // Allow white for eraser
           
           if (isAllowed) {
             // Update active button styling only for allowed colors
@@ -432,5 +486,136 @@
         link.click();
       });
     }
+
+    // Custom Colors Management
+    const customColorsContainer = document.getElementById('customColorsContainer');
+    const customColors: string[] = [];
+    const MAX_CUSTOM_COLORS = 5;
+
+    // Function to create a custom color button
+    function createCustomColorButton(color: string): HTMLElement {
+      const button = document.createElement('button');
+      button.className = 'w-8 h-8 sm:w-10 sm:h-10 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition';
+      button.style.backgroundColor = color;
+      button.setAttribute('data-color', color);
+      button.setAttribute('aria-label', `Custom color ${color}`);
+      
+      // Add click handler
+      button.addEventListener('click', () => {
+        if (activeColorButton) {
+          activeColorButton.classList.remove('border-amber-500');
+          activeColorButton.classList.add('border-gray-300');
+        }
+        button.classList.remove('border-gray-300');
+        button.classList.add('border-amber-500');
+        activeColorButton = button;
+        setColor(color);
+      });
+      
+      return button;
+    }
+
+    // Function to add a custom color
+    function addCustomColor(color: string) {
+      if (customColors.length >= MAX_CUSTOM_COLORS) {
+        // Remove the oldest color
+        const oldestColor = customColors.shift();
+        if (oldestColor) {
+          customAllowedColors.delete(oldestColor);
+        }
+        if (customColorsContainer?.firstChild) {
+          customColorsContainer.removeChild(customColorsContainer.firstChild);
+        }
+      }
+      
+      customColors.push(color);
+      if (isYellowish(color)) {
+        customAllowedColors.add(color);
+      }
+      const button = createCustomColorButton(color);
+      customColorsContainer?.appendChild(button);
+    }
+
+    // Custom Color Picker
+    const customColorBtn = document.getElementById('customColorBtn');
+    const customColorModal = document.getElementById('customColorModal');
+    const colorPicker = document.getElementById('colorPicker') as HTMLInputElement;
+    const colorPreview = document.getElementById('colorPreview');
+    const happyPopeFace = document.getElementById('happyPopeFace');
+    const unhappyPopeFace = document.getElementById('unhappyPopeFace');
+    const cancelColorBtn = document.getElementById('cancelColorBtn');
+    const addColorBtn = document.getElementById('addColorBtn');
+
+    // Function to show custom color picker
+    function showCustomColorPicker() {
+      if (!customColorModal || !colorPreview || !happyPopeFace || !unhappyPopeFace) return;
+      
+      // Reset styles
+      customColorModal.style.opacity = '1';
+      customColorModal.classList.remove('pointer-events-none');
+      
+      // Set initial color
+      const initialColor = currentColor;
+      colorPicker.value = initialColor;
+      colorPreview.style.backgroundColor = initialColor;
+      
+      // Set initial pope face
+      updatePopeFace(initialColor);
+      
+      // Show modal with animation
+      requestAnimationFrame(() => {
+        customColorModal.querySelector('.bg-white')?.classList.remove('scale-95', 'opacity-0');
+      });
+    }
+
+    // Function to hide custom color picker
+    function hideCustomColorPicker() {
+      if (!customColorModal) return;
+      
+      // Hide modal with animation
+      customColorModal.querySelector('.bg-white')?.classList.add('scale-95', 'opacity-0');
+      
+      setTimeout(() => {
+        customColorModal.style.opacity = '0';
+        customColorModal.classList.add('pointer-events-none');
+      }, 300);
+    }
+
+    // Function to update pope face based on color
+    function updatePopeFace(color: string) {
+      if (!happyPopeFace || !unhappyPopeFace) return;
+      
+      const isYellow = isYellowish(color);
+      happyPopeFace.style.opacity = isYellow ? '1' : '0';
+      unhappyPopeFace.style.opacity = isYellow ? '0' : '1';
+    }
+
+    // Add event listeners for custom color picker
+    customColorBtn?.addEventListener('click', showCustomColorPicker);
+    cancelColorBtn?.addEventListener('click', hideCustomColorPicker);
+    
+    colorPicker?.addEventListener('input', (e) => {
+      const color = (e.target as HTMLInputElement).value;
+      if (colorPreview) {
+        colorPreview.style.backgroundColor = color;
+      }
+      updatePopeFace(color);
+    });
+    
+    addColorBtn?.addEventListener('click', () => {
+      const selectedColor = colorPicker.value;
+      if (isYellowish(selectedColor)) {
+        addCustomColor(selectedColor);
+        setColor(selectedColor);
+      } else {
+        // Show pope intervention for non-yellow colors
+        if (!popeIntervention) {
+          popeIntervention = true;
+          showPopeIntervention();
+          setColor('#facc15'); // Force yellow
+        }
+      }
+      hideCustomColorPicker();
+    });
   });
 </script> 

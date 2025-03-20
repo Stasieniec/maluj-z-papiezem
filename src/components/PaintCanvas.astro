@@ -20,11 +20,11 @@
               </div>
             </div>
           </div>
-          <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
+          <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-amber-500 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
+          <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
           <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
           <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
           <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
-          <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
           <button id="purpleBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#a855f7" aria-label="Purple color"></button>
           
           <!-- Custom Colors Container -->
@@ -58,12 +58,15 @@
       </div>
       
       <!-- Add Barka Button -->
-      <button
-        id="barkaBtn"
-        class="px-4 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition flex items-center gap-2"
-      >
-        <span>🎵 Barka</span>
-      </button>
+      <div class="flex items-center gap-2">
+        <button
+          id="barkaBtn"
+          class="px-4 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition flex items-center gap-2"
+        >
+          <span id="barkaIcon">🎵</span>
+          <span id="barkaText">Barka</span>
+        </button>
+      </div>
     </div>
 
     <!-- Canvas Container -->
@@ -380,26 +383,48 @@
       }
     }
 
-    // Barka Button
+    // Barka Audio Player
     const barkaBtn = document.getElementById('barkaBtn') as HTMLElement;
-    let barkaPlaying = false;
+    const barkaIcon = document.getElementById('barkaIcon') as HTMLElement;
+    const barkaText = document.getElementById('barkaText') as HTMLElement;
+    
     let barkaAudio: HTMLAudioElement | null = null;
+    let isPlaying = false;
 
-    barkaBtn.addEventListener('click', () => {
-      if (!barkaPlaying) {
-        barkaAudio = new Audio('/barka.mp3');
-        barkaAudio.volume = 0.5;
-        barkaAudio.play();
-        barkaPlaying = true;
-        barkaBtn.classList.add('bg-amber-600');
-        barkaBtn.innerHTML = '<span>🎵 Barka (Stop)</span>';
-      } else {
-        barkaAudio?.pause();
-        barkaAudio = null;
-        barkaPlaying = false;
+    // Function to initialize audio
+    function initializeAudio() {
+      if (barkaAudio) return;
+      
+      barkaAudio = new Audio('/audio/barka.mp3');
+      barkaAudio.volume = 0.5;
+      
+      barkaAudio.addEventListener('ended', () => {
+        isPlaying = false;
+        barkaIcon.textContent = '🎵';
+        barkaText.textContent = 'Barka';
         barkaBtn.classList.remove('bg-amber-600');
-        barkaBtn.innerHTML = '<span>🎵 Barka</span>';
+      });
+    }
+
+    // Play/Pause button
+    barkaBtn.addEventListener('click', () => {
+      initializeAudio();
+      
+      if (!barkaAudio) return;
+      
+      if (isPlaying) {
+        barkaAudio.pause();
+        barkaIcon.textContent = '🎵';
+        barkaText.textContent = 'Barka';
+        barkaBtn.classList.remove('bg-amber-600');
+      } else {
+        barkaAudio.play();
+        barkaIcon.textContent = '⏸️';
+        barkaText.textContent = 'Pause';
+        barkaBtn.classList.add('bg-amber-600');
       }
+      
+      isPlaying = !isPlaying;
     });
 
     // Add setSize function

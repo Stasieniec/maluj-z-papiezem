@@ -7,7 +7,19 @@
     <!-- Toolbar -->
     <div class="flex flex-wrap gap-2 mb-4 bg-yellow-100 p-2 rounded-lg">
       <div class="flex items-center space-x-1 sm:space-x-2">
-        <div class="flex space-x-1 sm:space-x-2">
+        <div class="flex space-x-1 sm:space-x-2 relative">
+          <!-- Pope Intervention Container -->
+          <div id="popeIntervention" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
+            <div id="popeContainer" class="bg-white rounded-lg p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-300">
+              <div class="flex flex-col items-center gap-4">
+                <img id="popeImage" src="/pope_images/side_face_left.png" alt="Jan Paweł II" class="w-32 h-32 object-contain">
+                <p class="text-xl font-bold text-amber-700 text-center">TYLKO RZUŁTY!</p>
+                <button id="popeConfirmBtn" class="px-6 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition">
+                  Dobrze, Ojcze Święty
+                </button>
+              </div>
+            </div>
+          </div>
           <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
           <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
           <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
@@ -54,17 +66,6 @@
         width="800"
         height="600"
       ></canvas>
-      <!-- Pope Intervention Container -->
-      <div id="popeIntervention" class="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-300 z-50">
-        <div id="popeContainer" class="absolute bottom-8 right-8 transform translate-y-full opacity-0 transition-all duration-300">
-          <div class="relative">
-            <img id="popeImage" src="/pope_images/waving-hand.png" alt="Jan Paweł II" class="w-48 h-48 object-contain">
-            <div class="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-3 border-2 border-yellow-200">
-              <p class="text-amber-700 font-bold text-lg">TYLKO RZUŁTY!</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Action Buttons -->
@@ -283,87 +284,64 @@
     // Pope Intervention Feature
     let popeIntervention = false;
     const allowedColors = ['#facc15', '#f59e0b', '#fbbf24', '#fcd34d']; // Yellow variants
-    const popeImages = {
-      wave: '/pope_images/waving-hand.png',
-      face: '/pope_images/face.png',
-      side: '/pope_images/side_face_left.png',
-      hands: '/pope_images/front_photo_hands_up.png'
-    };
+    const popeImage = '/pope_images/side_face_left.png';
 
     // Initialize pope elements
     const popeInterventionContainer = document.getElementById('popeIntervention');
-    const popeImage = document.getElementById('popeImage') as HTMLImageElement;
+    const popeImageElement = document.getElementById('popeImage') as HTMLImageElement;
     const popeContainer = document.getElementById('popeContainer');
+    const popeConfirmBtn = document.getElementById('popeConfirmBtn');
 
     console.log('Pope elements:', {
       container: popeInterventionContainer,
-      image: popeImage,
+      image: popeImageElement,
       containerParent: popeContainer
     });
 
-    // Animation state
-    let animationStartTime: number | null = null;
-    let isAnimating = false;
-
-    // Function to animate pope intervention
-    function animatePopeIntervention(timestamp: number) {
-      if (!popeContainer || !popeInterventionContainer || !animationStartTime) return;
-
-      const progress = timestamp - animationStartTime;
-      const duration = 2000; // 2 seconds total
-
-      if (progress < duration) {
-        // First 500ms: slide up
-        if (progress < 500) {
-          const slideProgress = progress / 500;
-          popeContainer.style.transform = `translateY(${(1 - slideProgress) * 100}%)`;
-          popeContainer.style.opacity = slideProgress.toString();
-        }
-        // Next 1000ms: bounce
-        else if (progress < 1500) {
-          popeContainer.classList.add('animate-bounce');
-        }
-        // Last 500ms: slide down
-        else {
-          popeContainer.classList.remove('animate-bounce');
-          const slideProgress = (progress - 1500) / 500;
-          popeContainer.style.transform = `translateY(${slideProgress * 100}%)`;
-          popeContainer.style.opacity = (1 - slideProgress).toString();
-        }
-
-        requestAnimationFrame(animatePopeIntervention);
-      } else {
-        // Animation complete
-        popeContainer.style.transform = 'translateY(100%)';
-        popeContainer.style.opacity = '0';
-        popeInterventionContainer.style.opacity = '0';
-        isAnimating = false;
-        popeIntervention = false;
-      }
-    }
-
-    // Function to start pope intervention
-    function startPopeIntervention() {
-      if (!popeContainer || !popeInterventionContainer || !popeImage) {
+    // Function to show pope intervention
+    function showPopeIntervention() {
+      if (!popeContainer || !popeInterventionContainer || !popeImageElement) {
         console.error('Pope elements not found');
         return;
       }
 
       // Reset styles
-      popeContainer.style.transform = 'translateY(100%)';
+      popeContainer.style.transform = 'scale(0.95)';
       popeContainer.style.opacity = '0';
       popeInterventionContainer.style.opacity = '1';
+      popeInterventionContainer.classList.remove('pointer-events-none');
       
-      // Randomly select a pope image
-      const images = Object.values(popeImages);
-      const randomPope = images[Math.floor(Math.random() * images.length)];
-      console.log('Selected pope image:', randomPope);
-      popeImage.src = randomPope;
+      // Set the pope image
+      popeImageElement.src = popeImage;
+      console.log('Showing pope image:', popeImage);
 
-      // Start animation
-      animationStartTime = performance.now();
-      isAnimating = true;
-      requestAnimationFrame(animatePopeIntervention);
+      // Show modal with animation
+      requestAnimationFrame(() => {
+        popeContainer.style.transform = 'scale(1)';
+        popeContainer.style.opacity = '1';
+      });
+    }
+
+    // Function to hide pope intervention
+    function hidePopeIntervention() {
+      if (!popeContainer || !popeInterventionContainer) return;
+      
+      // Hide modal with animation
+      popeContainer.style.transform = 'scale(0.95)';
+      popeContainer.style.opacity = '0';
+      
+      setTimeout(() => {
+        popeInterventionContainer.style.opacity = '0';
+        popeInterventionContainer.classList.add('pointer-events-none');
+        popeIntervention = false;
+      }, 300);
+    }
+
+    // Add click handler for confirm button
+    if (popeConfirmBtn) {
+      popeConfirmBtn.addEventListener('click', () => {
+        hidePopeIntervention();
+      });
     }
 
     // Update color selection function
@@ -380,7 +358,7 @@
       if (!isAllowed && !popeIntervention) {
         console.log('Triggering pope intervention');
         popeIntervention = true;
-        startPopeIntervention();
+        showPopeIntervention();
         
         // Set forced yellow
         currentColor = '#facc15';
@@ -402,15 +380,6 @@
         ctx.strokeStyle = color;
       }
     }
-
-    // Add event listener to reset pope intervention when clicking outside
-    document.addEventListener('click', (e) => {
-      if (popeIntervention && 
-          popeInterventionContainer && 
-          !popeInterventionContainer.contains(e.target as Node)) {
-        popeIntervention = false;
-      }
-    });
 
     // 2137 Easter Egg
     let last2137Check = 0;

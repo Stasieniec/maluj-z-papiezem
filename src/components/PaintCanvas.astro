@@ -1,0 +1,277 @@
+---
+// PaintCanvas.astro - A simple paint canvas component
+---
+
+<div class="flex flex-col bg-white rounded-xl shadow-lg overflow-hidden">
+  <div class="flex flex-wrap justify-between items-center bg-gray-50 border-b border-gray-200 p-4">
+    <div class="flex items-center space-x-1 sm:space-x-2">
+      <div class="flex space-x-1 sm:space-x-2">
+        <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
+        <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
+        <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
+        <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
+        <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
+        <button id="purpleBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#a855f7" aria-label="Purple color"></button>
+      </div>
+      
+      <div class="hidden sm:block h-8 sm:h-10 border-r border-gray-300 mx-2"></div>
+      
+      <div class="flex items-center space-x-1 sm:space-x-2">
+        <button id="sizeSmall" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition" data-size="3" aria-label="Small brush size">
+          <div class="w-1 h-1 bg-gray-800 rounded-full"></div>
+        </button>
+        <button id="sizeMedium" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition" data-size="5" aria-label="Medium brush size">
+          <div class="w-2 h-2 bg-gray-800 rounded-full"></div>
+        </button>
+        <button id="sizeLarge" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition" data-size="10" aria-label="Large brush size">
+          <div class="w-4 h-4 bg-gray-800 rounded-full"></div>
+        </button>
+      </div>
+
+      <div class="hidden sm:block h-8 sm:h-10 border-r border-gray-300 mx-2"></div>
+      
+      <button id="eraserBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-50 transition" data-color="#ffffff" aria-label="Eraser">
+        <span class="text-gray-500">⌫</span>
+      </button>
+    </div>
+    
+    <div class="flex mt-2 sm:mt-0">
+      <button id="clearBtn" class="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 text-gray-700 font-medium rounded-md shadow-sm hover:bg-gray-300 transition flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M4 2a1 1 0 00-1 1v1h14V3a1 1 0 00-1-1H4zm13 4H3v10a1 1 0 001 1h12a1 1 0 001-1V6z" clip-rule="evenodd" />
+        </svg>
+        Clear
+      </button>
+      <button id="downloadBtn" class="ml-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 transition flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Save
+      </button>
+    </div>
+  </div>
+  
+  <div class="relative w-full bg-white p-2 sm:p-4">
+    <canvas 
+      id="paintCanvas" 
+      width="1000" 
+      height="600" 
+      class="w-full h-full bg-white border border-gray-200 rounded-lg shadow-inner mx-auto touch-none">
+    </canvas>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Initialize the canvas and context
+    const canvas = document.getElementById('paintCanvas') as HTMLCanvasElement | null;
+    if (!canvas) {
+      console.error('Could not find canvas element');
+      return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('Could not get 2D context');
+      return;
+    }
+    
+    // Set default color and line width
+    let currentColor = '#000000';
+    let currentSize = 5; // Default medium brush size
+    let isDrawing = false;
+    
+    // Make canvas responsive
+    function resizeCanvas() {
+      const containerWidth = canvas.parentElement?.clientWidth || canvas.width;
+      const containerHeight = Math.floor(containerWidth * (canvas.height / canvas.width));
+      
+      // Store the current drawing
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) return;
+      
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      tempCtx.drawImage(canvas, 0, 0);
+      
+      // Style canvas width to fit container
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+      
+      // Restore the drawing
+      ctx.drawImage(tempCanvas, 0, 0);
+    }
+    
+    // Initialize the canvas with a white background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Set initial drawing settings
+    ctx.lineWidth = currentSize;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = currentColor;
+    
+    // Resize canvas on load
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Mouse event handlers
+    function startDrawing(e: MouseEvent) {
+      isDrawing = true;
+      draw(e);
+    }
+    
+    function stopDrawing() {
+      isDrawing = false;
+      ctx.beginPath();
+    }
+    
+    function draw(e: MouseEvent) {
+      if (!isDrawing) return;
+      
+      // Get correct mouse position
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Calculate scaling factor if canvas is rendered at a different size
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      
+      const canvasX = x * scaleX;
+      const canvasY = y * scaleY;
+      
+      ctx.lineTo(canvasX, canvasY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(canvasX, canvasY);
+    }
+    
+    // Add event listeners for mouse
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseout', stopDrawing);
+    
+    // Add touch support for mobile devices
+    canvas.addEventListener('touchstart', (e: TouchEvent) => {
+      e.preventDefault();
+      if (e.touches && e.touches[0]) {
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousedown', {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }
+    });
+    
+    canvas.addEventListener('touchend', (e: TouchEvent) => {
+      e.preventDefault();
+      const mouseEvent = new MouseEvent('mouseup', {});
+      canvas.dispatchEvent(mouseEvent);
+    });
+    
+    canvas.addEventListener('touchmove', (e: TouchEvent) => {
+      e.preventDefault();
+      if (e.touches && e.touches[0]) {
+        const touch = e.touches[0];
+        const mouseEvent = new MouseEvent('mousemove', {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }
+    });
+    
+    // Color buttons - using data attributes for colors
+    const colorButtons = document.querySelectorAll('[data-color]');
+    let activeColorButton = document.getElementById('blackBtn') as HTMLElement | null;
+    
+    colorButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Get color from data attribute
+        const color = button.getAttribute('data-color');
+        if (color) {
+          setColor(color);
+          
+          // Update active button styling
+          if (activeColorButton) {
+            activeColorButton.classList.remove('border-blue-500');
+            activeColorButton.classList.add('border-gray-300');
+          }
+          button.classList.remove('border-gray-300');
+          button.classList.add('border-blue-500');
+          activeColorButton = button as HTMLElement;
+        }
+      });
+    });
+    
+    // Brush size buttons
+    const sizeButtons = document.querySelectorAll('[data-size]');
+    let activeSizeButton = document.getElementById('sizeMedium') as HTMLElement | null;
+    
+    sizeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const size = button.getAttribute('data-size');
+        if (size) {
+          setSize(parseInt(size));
+          
+          // Update active button styling
+          if (activeSizeButton) {
+            activeSizeButton.classList.remove('border-blue-500');
+            activeSizeButton.classList.add('border-gray-300');
+          }
+          button.classList.remove('border-gray-300');
+          button.classList.add('border-blue-500');
+          activeSizeButton = button as HTMLElement;
+        }
+      });
+    });
+    
+    // Clear button
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = currentColor;
+      });
+    }
+    
+    // Download button
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'maluj-z-papiezem.png';
+        link.href = image;
+        link.click();
+      });
+    }
+    
+    function setColor(color: string) {
+      currentColor = color;
+      ctx.strokeStyle = color;
+    }
+    
+    function setSize(size: number) {
+      currentSize = size;
+      ctx.lineWidth = size;
+    }
+    
+    // Set initial active buttons
+    if (activeColorButton) {
+      activeColorButton.classList.remove('border-gray-300');
+      activeColorButton.classList.add('border-blue-500');
+    }
+    
+    if (activeSizeButton) {
+      activeSizeButton.classList.remove('border-gray-300');
+      activeSizeButton.classList.add('border-blue-500');
+    }
+  });
+</script> 

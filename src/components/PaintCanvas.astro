@@ -218,69 +218,6 @@
     const colorButtons = document.querySelectorAll('[data-color]');
     let activeColorButton = document.getElementById('blackBtn') as HTMLElement | null;
     
-    colorButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Get color from data attribute
-        const color = button.getAttribute('data-color');
-        if (color) {
-          setColor(color);
-          
-          // Update active button styling
-          if (activeColorButton) {
-            activeColorButton.classList.remove('border-amber-500');
-            activeColorButton.classList.add('border-gray-300');
-          }
-          button.classList.remove('border-gray-300');
-          button.classList.add('border-amber-500');
-          activeColorButton = button as HTMLElement;
-        }
-      });
-    });
-    
-    // Brush size buttons
-    const sizeButtons = document.querySelectorAll('[data-size]');
-    let activeSizeButton = document.getElementById('sizeMedium') as HTMLElement | null;
-    
-    sizeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const size = button.getAttribute('data-size');
-        if (size) {
-          setSize(parseInt(size));
-          
-          // Update active button styling
-          if (activeSizeButton) {
-            activeSizeButton.classList.remove('border-amber-500');
-            activeSizeButton.classList.add('border-gray-300');
-          }
-          button.classList.remove('border-gray-300');
-          button.classList.add('border-amber-500');
-          activeSizeButton = button as HTMLElement;
-        }
-      });
-    });
-    
-    // Clear button
-    const clearBtn = document.getElementById('clearBtn');
-    if (clearBtn) {
-      clearBtn.addEventListener('click', () => {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = currentColor;
-      });
-    }
-    
-    // Download button
-    const downloadBtn = document.getElementById('downloadBtn');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', () => {
-        const image = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.download = 'maluj-z-papiezem.png';
-        link.href = image;
-        link.click();
-      });
-    }
-    
     // Pope Intervention Feature
     let popeIntervention = false;
     const allowedColors = ['#facc15', '#f59e0b', '#fbbf24', '#fcd34d']; // Yellow variants
@@ -363,18 +300,6 @@
         // Set forced yellow
         currentColor = '#facc15';
         ctx.strokeStyle = currentColor;
-        
-        // Update active button
-        if (activeColorButton) {
-          activeColorButton.classList.remove('border-amber-500');
-          activeColorButton.classList.add('border-gray-300');
-        }
-        const yellowBtn = document.getElementById('yellowBtn');
-        if (yellowBtn) {
-          yellowBtn.classList.remove('border-gray-300');
-          yellowBtn.classList.add('border-amber-500');
-          activeColorButton = yellowBtn as HTMLElement;
-        }
       } else {
         currentColor = color;
         ctx.strokeStyle = color;
@@ -438,5 +363,74 @@
       check2137();
     }
     animate();
+
+    // Color buttons - using data attributes for colors
+    colorButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Get color from data attribute
+        const color = button.getAttribute('data-color');
+        if (color) {
+          // Check if color is allowed (any yellow)
+          const isAllowed = allowedColors.includes(color) || color === '#ffffff'; // Allow white for eraser
+          
+          if (isAllowed) {
+            // Update active button styling only for allowed colors
+            if (activeColorButton) {
+              activeColorButton.classList.remove('border-amber-500');
+              activeColorButton.classList.add('border-gray-300');
+            }
+            button.classList.remove('border-gray-300');
+            button.classList.add('border-amber-500');
+            activeColorButton = button as HTMLElement;
+          }
+          
+          setColor(color);
+        }
+      });
+    });
+    
+    // Brush size buttons
+    const sizeButtons = document.querySelectorAll('[data-size]');
+    let activeSizeButton = document.getElementById('sizeMedium') as HTMLElement | null;
+    
+    sizeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const size = button.getAttribute('data-size');
+        if (size) {
+          setSize(parseInt(size));
+          
+          // Update active button styling
+          if (activeSizeButton) {
+            activeSizeButton.classList.remove('border-amber-500');
+            activeSizeButton.classList.add('border-gray-300');
+          }
+          button.classList.remove('border-gray-300');
+          button.classList.add('border-amber-500');
+          activeSizeButton = button as HTMLElement;
+        }
+      });
+    });
+    
+    // Clear button
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = currentColor;
+      });
+    }
+    
+    // Download button
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', () => {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.download = 'maluj-z-papiezem.png';
+        link.href = image;
+        link.click();
+      });
+    }
   });
 </script> 

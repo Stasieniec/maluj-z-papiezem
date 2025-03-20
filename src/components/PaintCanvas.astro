@@ -20,8 +20,8 @@
               </div>
             </div>
           </div>
-          <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-amber-500 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
-          <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
+          <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
+          <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-amber-500 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
           <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
           <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
           <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
@@ -142,7 +142,7 @@
     }
     
     // Set default color and line width
-    let currentColor = '#000000';
+    let currentColor = '#facc15';
     let currentSize = 5; // Default medium brush size
     let isDrawing = false;
     
@@ -256,7 +256,7 @@
     
     // Color buttons - using data attributes for colors
     const colorButtons = document.querySelectorAll('[data-color]');
-    let activeColorButton = document.getElementById('blackBtn') as HTMLElement | null;
+    let activeColorButton = document.getElementById('yellowBtn') as HTMLElement | null;
     
     // Pope Intervention Feature
     let popeIntervention = false;

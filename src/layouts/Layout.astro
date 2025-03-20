@@ -1,19 +1,77 @@
 ---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+	title = "Maluj z Papieżem - Interaktywne narzędzie do malowania", 
+	description = "Stwórz własny obrazek inspirowany Janem Pawłem II. Interaktywne narzędzie do malowania z motywem papieskim."
+} = Astro.props;
+
 import '../styles/global.css';
 ---
 
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="pl" class="h-full">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="Maluj z Papieżem - A simple drawing application" />
+		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Maluj z Papieżem | Drawing App</title>
+		<title>{title}</title>
+		
+		<!-- Canonical URL -->
+		<link rel="canonical" href="https://malujzpapiezem.pl" />
+		
+		<!-- Preload critical assets -->
+		<link rel="preload" href="/barka.mp3" as="audio" />
+		<link rel="preload" href="/pope_images/face_happy.png" as="image" />
+		
+		<!-- Open Graph / Social Media -->
+		<meta property="og:title" content="Maluj z Papieżem" />
+		<meta property="og:description" content="Stwórz własny obrazek inspirowany Janem Pawłem II" />
+		<meta property="og:image" content="https://malujzpapiezem.pl/og-image.png" />
+		<meta property="og:url" content="https://malujzpapiezem.pl" />
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary_large_image" />
+		
+		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+		
+		<!-- Structured Data -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebApplication",
+				"name": "Maluj z Papieżem",
+				"description": "Interaktywne narzędzie do malowania z motywem Jana Pawła II",
+				"url": "https://malujzpapiezem.pl",
+				"applicationCategory": "MultimediaApplication",
+				"offers": {
+					"@type": "Offer",
+					"price": "0",
+					"priceCurrency": "PLN"
+				}
+			}
+		</script>
+		
+		<!-- Website Schema -->
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@type": "WebSite",
+				"url": "https://malujzpapiezem.pl",
+				"potentialAction": {
+					"@type": "SearchAction",
+					"target": "https://malujzpapiezem.pl/search?q={search_term_string}",
+					"query-input": "required name=search_term_string"
+				}
+			}
+		</script>
 	</head>
 	<body class="min-h-full bg-yellow-50 text-amber-900 flex flex-col font-sans">
 		<slot />

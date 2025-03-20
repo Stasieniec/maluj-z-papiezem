@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://malujzpapiezem.pl/sitemap.xml 

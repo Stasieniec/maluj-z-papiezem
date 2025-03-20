@@ -107,11 +107,22 @@
         <img src="/pope_images/face_unhappy.png" alt="Unhappy Pope" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 opacity-0" id="unhappyPopeFace">
       </div>
       
-      <!-- Color Picker -->
-      <input type="color" id="colorPicker" class="w-full h-12 rounded cursor-pointer">
+      <!-- Color Selection Instructions -->
+      <div class="text-sm text-gray-600 text-center">
+        <p>Kliknij poniżej aby wybrać kolor</p>
+        <p>Możesz przeciągać, aby wybrać odcień</p>
+      </div>
+      
+      <!-- Color Picker Wrapper -->
+      <div class="w-full">
+        <input type="color" id="colorPicker" class="w-full h-12 rounded cursor-pointer">
+      </div>
       
       <!-- Color Preview -->
-      <div id="colorPreview" class="w-full h-8 rounded border-2 border-gray-300"></div>
+      <div class="w-full flex items-center gap-2">
+        <div class="text-sm text-gray-600">Wybrany kolor:</div>
+        <div id="colorPreview" class="flex-grow h-8 rounded border-2 border-gray-300"></div>
+      </div>
       
       <!-- Buttons -->
       <div class="flex gap-2">

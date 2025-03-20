@@ -5,67 +5,73 @@
 <div class="max-w-4xl mx-auto p-4">
   <div class="bg-yellow-50 rounded-lg shadow-lg p-4">
     <!-- Toolbar -->
-    <div class="flex flex-wrap gap-2 mb-4 bg-yellow-100 p-2 rounded-lg">
-      <div class="flex items-center space-x-1 sm:space-x-2">
-        <div class="flex space-x-1 sm:space-x-2 relative">
-          <!-- Pope Intervention Container -->
-          <div id="popeIntervention" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
-            <div id="popeContainer" class="bg-white rounded-lg p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-300">
-              <div class="flex flex-col items-center gap-4">
-                <img id="popeImage" src="/pope_images/side_face_left.png" alt="Jan Paweł II" class="w-32 h-32 object-contain">
-                <p class="text-xl font-bold text-amber-700 text-center">Hmm, zdaje mi się, że to nie jest kolor rzuły.</p>
-                <button id="popeConfirmBtn" class="px-6 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition">
-                  Dobrze, Ojcze Święty
-                </button>
+    <div class="mb-4 bg-yellow-100 p-2 rounded-lg">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Color and brush tools section -->
+        <div class="flex flex-wrap gap-2 items-center">
+          <div class="flex flex-wrap space-x-1 sm:space-x-2 relative">
+            <!-- Pope Intervention Container -->
+            <div id="popeIntervention" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300 z-50">
+              <div id="popeContainer" class="bg-white rounded-lg p-6 shadow-xl transform scale-95 opacity-0 transition-all duration-300">
+                <div class="flex flex-col items-center gap-4">
+                  <img id="popeImage" src="/pope_images/side_face_left.png" alt="Jan Paweł II" class="w-32 h-32 object-contain">
+                  <p class="text-xl font-bold text-amber-700 text-center">Hmm, zdaje mi się, że to nie jest kolor rzuły.</p>
+                  <button id="popeConfirmBtn" class="px-6 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition">
+                    Dobrze, Ojcze Święty
+                  </button>
+                </div>
               </div>
             </div>
+            <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
+            <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-amber-500 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
+            <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
+            <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
+            <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
+            <button id="purpleBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#a855f7" aria-label="Purple color"></button>
+            
+            <!-- Custom Colors Container -->
+            <div id="customColorsContainer" class="flex space-x-1 sm:space-x-2"></div>
+            
+            <!-- Custom Color Button -->
+            <button id="customColorBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-red-500 via-green-500 to-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" aria-label="Custom color">
+              <div class="w-full h-full rounded-full bg-white opacity-50"></div>
+            </button>
           </div>
-          <button id="blackBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-black border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#000000" aria-label="Black color"></button>
-          <button id="yellowBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-yellow-400 border-2 border-amber-500 rounded-full shadow-sm hover:scale-110 transition" data-color="#facc15" aria-label="Yellow color"></button>
-          <button id="redBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-red-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#ef4444" aria-label="Red color"></button>
-          <button id="greenBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-green-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#10b981" aria-label="Green color"></button>
-          <button id="blueBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#3b82f6" aria-label="Blue color"></button>
-          <button id="purpleBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-purple-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" data-color="#a855f7" aria-label="Purple color"></button>
           
-          <!-- Custom Colors Container -->
-          <div id="customColorsContainer" class="flex space-x-1 sm:space-x-2"></div>
+          <div class="hidden sm:block h-8 sm:h-10 border-r border-yellow-200 mx-2"></div>
           
-          <!-- Custom Color Button -->
-          <button id="customColorBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-red-500 via-green-500 to-blue-500 border-2 border-gray-300 rounded-full shadow-sm hover:scale-110 transition" aria-label="Custom color">
-            <div class="w-full h-full rounded-full bg-white opacity-50"></div>
-          </button>
-        </div>
-        
-        <div class="hidden sm:block h-8 sm:h-10 border-r border-yellow-200 mx-2"></div>
-        
-        <div class="flex items-center space-x-1 sm:space-x-2">
-          <button id="sizeSmall" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="3" aria-label="Small brush size">
-            <div class="w-1 h-1 bg-gray-800 rounded-full"></div>
-          </button>
-          <button id="sizeMedium" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="5" aria-label="Medium brush size">
-            <div class="w-2 h-2 bg-gray-800 rounded-full"></div>
-          </button>
-          <button id="sizeLarge" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="10" aria-label="Large brush size">
-            <div class="w-4 h-4 bg-gray-800 rounded-full"></div>
-          </button>
-        </div>
+          <div class="flex items-center space-x-1 sm:space-x-2">
+            <button id="sizeSmall" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="3" aria-label="Small brush size">
+              <div class="w-1 h-1 bg-gray-800 rounded-full"></div>
+            </button>
+            <button id="sizeMedium" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="5" aria-label="Medium brush size">
+              <div class="w-2 h-2 bg-gray-800 rounded-full"></div>
+            </button>
+            <button id="sizeLarge" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-size="10" aria-label="Large brush size">
+              <div class="w-4 h-4 bg-gray-800 rounded-full"></div>
+            </button>
+          </div>
 
-        <div class="hidden sm:block h-8 sm:h-10 border-r border-yellow-200 mx-2"></div>
+          <div class="hidden sm:block h-8 sm:h-10 border-r border-yellow-200 mx-2"></div>
+          
+          <button id="eraserBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-color="#ffffff" aria-label="Eraser">
+            <span class="text-gray-500">⌫</span>
+          </button>
+        </div>
         
-        <button id="eraserBtn" class="w-8 h-8 sm:w-10 sm:h-10 bg-white border-2 border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-yellow-50 transition" data-color="#ffffff" aria-label="Eraser">
-          <span class="text-gray-500">⌫</span>
-        </button>
-      </div>
-      
-      <!-- Add Barka Button -->
-      <div class="flex items-center gap-2">
-        <button
-          id="barkaBtn"
-          class="px-4 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition flex items-center gap-2"
-        >
-          <span id="barkaIcon">🎵</span>
-          <span id="barkaText">Barka</span>
-        </button>
+        <!-- Divider for mobile -->
+        <div class="border-t border-yellow-200 sm:hidden my-1"></div>
+        
+        <!-- Barka Button section -->
+        <div class="flex items-center">
+          <button
+            id="barkaBtn"
+            class="px-4 py-2 bg-amber-500 text-white rounded-md font-bold hover:bg-amber-600 transition flex items-center gap-2"
+          >
+            <span id="barkaIcon">🎵</span>
+            <span id="barkaText">Barka</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -418,7 +424,7 @@
       const date = new Date();
       if (date.getHours() === 21 && date.getMinutes() === 37) {
         // Special 2137 event!
-        const audio = new Audio('/audio/barka.mp3');
+        const audio = new Audio('/barka.mp3');
         audio.volume = 0.5;
         audio.play();
         
@@ -440,10 +446,24 @@
     function initializeAudio() {
       if (barkaAudio) return;
       
-      barkaAudio = new Audio('/audio/barka.mp3');
+      console.log('Initializing Barka audio');
+      // Use the correct path to the audio file (public folder)
+      barkaAudio = new Audio('/barka.mp3');
       barkaAudio.volume = 0.5;
       
+      // Add error handling
+      barkaAudio.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        console.error('Audio error code:', barkaAudio?.error?.code);
+        console.error('Audio error message:', barkaAudio?.error?.message);
+      });
+      
+      barkaAudio.addEventListener('canplaythrough', () => {
+        console.log('Audio loaded and can play');
+      });
+      
       barkaAudio.addEventListener('ended', () => {
+        console.log('Audio playback ended');
         isPlaying = false;
         barkaIcon.textContent = '🎵';
         barkaText.textContent = 'Barka';
@@ -453,17 +473,28 @@
 
     // Play/Pause button
     barkaBtn.addEventListener('click', () => {
+      console.log('Barka button clicked');
       initializeAudio();
       
-      if (!barkaAudio) return;
+      if (!barkaAudio) {
+        console.error('Failed to initialize audio');
+        return;
+      }
       
       if (isPlaying) {
+        console.log('Pausing audio');
         barkaAudio.pause();
         barkaIcon.textContent = '🎵';
         barkaText.textContent = 'Barka';
         barkaBtn.classList.remove('bg-amber-600');
       } else {
-        barkaAudio.play();
+        console.log('Playing audio');
+        const playPromise = barkaAudio.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error('Play error:', error);
+          });
+        }
         barkaIcon.textContent = '⏸️';
         barkaText.textContent = 'Pause';
         barkaBtn.classList.add('bg-amber-600');

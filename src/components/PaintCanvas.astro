@@ -424,7 +424,7 @@
       const date = new Date();
       if (date.getHours() === 21 && date.getMinutes() === 37) {
         // Special 2137 event!
-        const audio = new Audio('/barka.mp3');
+        const audio = new Audio('/audio/barka.mp3');
         audio.volume = 0.5;
         audio.play();
         
@@ -448,7 +448,7 @@
       
       console.log('Initializing Barka audio');
       // Use the correct path to the audio file (public folder)
-      barkaAudio = new Audio('/barka.mp3');
+      barkaAudio = new Audio('/audio/barka.mp3');
       barkaAudio.volume = 0.5;
       
       // Add error handling
